@@ -75,14 +75,32 @@ console.log(boss2.returnThis());  //  => boss2 */
 * 注意this是不可以直接赋值的哦，this = 2会报ReferenceError。） 
 * */
 
-function returnThis() {
-	return this; 
- };
+// function returnThis() {
+// 	return this; 
+//  };
  
- var boss1 = {name: 'boss1'};
+//  var boss1 = {name: 'boss1'};
  
-  console.log(returnThis());				// => window
-  console.log(returnThis.call(boss1));	// => boss1
-  console.log(returnThis.apply(boss1));	// => boss1
+//   console.log(returnThis());				// => window
+//   console.log(returnThis.call(boss1));	// => boss1
+//   console.log(returnThis.apply(boss1));	// => boss1
  
+ /*  第四层：海誓山盟 
+  * 第四层大佬是Object.prototype.bind，
+  * 他不但通过一个新函数来提供永久的绑定，
+  * 还会覆盖第三层大佬的命令。
+  * */
  
+ function returnThis() {
+	return this;
+};
+
+var boss1 = { name: 'boss1'};
+
+var boss1ReturnThis = returnThis.bind(boss1);
+
+  console.log(boss1ReturnThis());	// => boss1
+
+var boss2 = { name: 'boss2'};
+  console.log(boss1ReturnThis.call(boss2));	// => boss1
+
