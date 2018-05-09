@@ -110,18 +110,86 @@ console.log(boss2.returnThis());  //  => boss2 */
  * 它会覆盖bind的绑定。
  * */
 
-function showThis() {
-	console.log(this);
-};
+// function showThis() {
+// 	console.log(this);
+// };
 
-   showThis();		// => window
-   new showThis();	// => showThis
+//    showThis();		// => window
+//    new showThis();	// => showThis
 
-var boss1 = {name: 'boss1'};
-   showThis.call(boss1);	// => boss1
-   new showThis.call(boss1);	// => TypeError
+// var boss1 = {name: 'boss1'};
+//    showThis.call(boss1);	// => boss1
+//    new showThis.call(boss1);	// => TypeError
 
-var boss1ShowThis = showThis.bind(boss1);
-   boss1ShowThis();		// => boss1
-   new boss1ShowThis();	// => showThis
+// var boss1ShowThis = showThis.bind(boss1);
+//    boss1ShowThis();		// => boss1
+//    new boss1ShowThis();	// => showThis
 
+/* 第六层：军令如山
+* 最后一个法力无边的大佬就是 ES2015 的箭头函数。
+* 箭头函数里的this不再妖艳，被永远封印到当前词法作用域之中，称作 Lexical this ，
+* 在代码运行前就可以确定。没有其他大佬可以覆盖。
+* 这样的好处就是方便让回调函数的this使用当前的作用域，不怕引起混淆。
+* 所以对于箭头函数，只要看它在哪里创建的就行。 
+* */
+
+function callback(cb) {
+	cb();
+  };
+  
+   callback(() => {console.log(this); });		// =>window
+  
+  var boss1 = {
+	name: 'boss1',
+	callback: callback,
+	callback2() {
+		callback(() => {console.log(this);
+		});
+	}
+  };
+  
+   boss1.callback(() => {console.log(this); });	// => window
+   boss1.callback2(() => {console.log(this); });	// => boss1
+  
+  /* 下面这种奇葩的使用方式就需要注意： */
+  
+  var returnThis = () => this
+  returnThis() // window
+//   new returnThis() // TypeError
+  var boss1 = {
+    name: 'boss1',
+    returnThis () {
+      var func = () => this
+      return func()
+    }
+  }
+  
+  var returnThis = () => this
+  console.log(returnThis());			// => window
+  
+  // console.log(new returnThis());	// => TypeError
+  
+  var boss1 = {
+   name: 'boss1',
+   returnThis() {
+	   var func = () => this
+	   return func();
+   }
+  }
+  
+  console.log(returnThis.call(boss1));	// => window
+  
+  var boss1ReturnThis = returnThis.bind(boss1);
+  console.log(boss1ReturnThis());			// => window
+  
+  console.log(boss1.returnThis());		// => boss1
+  
+  var boss2 = {
+   name: 'boss2',
+   returnThis: boss1.returnThis
+  };
+  
+  console.log(boss2.returnThis());		// => boss2
+  
+  
+  
