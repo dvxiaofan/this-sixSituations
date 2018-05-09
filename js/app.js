@@ -5,7 +5,7 @@
  * 在use strict的情况下就是undefined。 
  * */
 
-/* function showThis() {
+/* /* function showThis() {
 	console.log(this);
 	
 };
@@ -17,7 +17,7 @@ function shouStrictThis() {
 } */
 
 // showThis(); // => window
-// shouStrictThis();  //  => undefined
+// shouStrictThis();  //  => undefined */
 
 /**  第二层：点石成金
  * 第二层大佬说白了就是找这个函数前面的点  .  。
@@ -25,7 +25,7 @@ function shouStrictThis() {
  * 比如下面的例子，boss是returnThis的 context object ，或者说returnThis属于boss。 
  * */
 
-var boss = {
+/* var boss = {
 	name: 'boss',
 	returnThis () {
 		return this;
@@ -68,7 +68,21 @@ var boss2 = {
    returnThis: boss1.returnThis
 };
 
-console.log(boss2.returnThis());  //  => boss2
+console.log(boss2.returnThis());  //  => boss2 */
 
+/*  第三层：指腹为婚 
+* 第三层大佬是Object.prototype.call和Object.prototype.apply，它们可以通过参数指定this。（
+* 注意this是不可以直接赋值的哦，this = 2会报ReferenceError。） 
+* */
 
-
+function returnThis() {
+	return this; 
+ };
+ 
+ var boss1 = {name: 'boss1'};
+ 
+  console.log(returnThis());				// => window
+  console.log(returnThis.call(boss1));	// => boss1
+  console.log(returnThis.apply(boss1));	// => boss1
+ 
+ 
