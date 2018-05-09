@@ -91,16 +91,37 @@ console.log(boss2.returnThis());  //  => boss2 */
   * 还会覆盖第三层大佬的命令。
   * */
  
- function returnThis() {
-	return this;
+//  function returnThis() {
+// 	return this;
+// };
+
+// var boss1 = { name: 'boss1'};
+
+// var boss1ReturnThis = returnThis.bind(boss1);
+
+//   console.log(boss1ReturnThis());	// => boss1
+
+// var boss2 = { name: 'boss2'};
+//   console.log(boss1ReturnThis.call(boss2));	// => boss1
+
+/* 第五层：内有乾坤 
+ * 一个比较容易忽略的会绑定this的地方就是new。
+ * 当我们new一个函数时，就会自动把this绑定在新对象上，然后再调用这个函数。
+ * 它会覆盖bind的绑定。
+ * */
+
+function showThis() {
+	console.log(this);
 };
 
-var boss1 = { name: 'boss1'};
+   showThis();		// => window
+   new showThis();	// => showThis
 
-var boss1ReturnThis = returnThis.bind(boss1);
+var boss1 = {name: 'boss1'};
+   showThis.call(boss1);	// => boss1
+   new showThis.call(boss1);	// => TypeError
 
-  console.log(boss1ReturnThis());	// => boss1
-
-var boss2 = { name: 'boss2'};
-  console.log(boss1ReturnThis.call(boss2));	// => boss1
+var boss1ShowThis = showThis.bind(boss1);
+   boss1ShowThis();		// => boss1
+   new boss1ShowThis();	// => showThis
 
